@@ -14,6 +14,11 @@ import java.awt.*;
 import java.util.List;
 
 public class GameRendererManager {
+    private static final int LAWN_MOWER_X_OFFSET = 180; // Position before first column
+    private static final int LAWN_MOWER_SIZE = 50;
+    private static final int GRID_ROWS = 5;
+    private static final int GRID_COLS = 9;
+    
     private final BackgroundRenderer backgroundRenderer;
     private final UIRenderer uiRenderer;
     private final EntityRenderers entityRenderers;
@@ -47,22 +52,20 @@ public class GameRendererManager {
     
     private void drawLawnMowers(Graphics2D g2d) {
         ImageInterface lawnMowerImage = assetLoader.getImage(AssetKey.UI_LAWNMOWER.getId());
-        int mowerSize = 50;
         int gridStartY = view.GridConverter.GRID_START_Y;
         int cellHeight = view.GridConverter.CELL_HEIGHT;
-        int mowerX = 180; // Position before the first column
         
-        for (int row = 0; row < 5; row++) {
-            int mowerY = gridStartY + row * cellHeight + (cellHeight - mowerSize) / 2;
+        for (int row = 0; row < GRID_ROWS; row++) {
+            int mowerY = gridStartY + row * cellHeight + (cellHeight - LAWN_MOWER_SIZE) / 2;
             
             if (lawnMowerImage != null && lawnMowerImage.isLoaded()) {
-                g2d.drawImage(lawnMowerImage.getImage(), mowerX, mowerY, mowerSize, mowerSize, null);
+                g2d.drawImage(lawnMowerImage.getImage(), LAWN_MOWER_X_OFFSET, mowerY, LAWN_MOWER_SIZE, LAWN_MOWER_SIZE, null);
             } else {
                 // Fallback if image not loaded
                 g2d.setColor(new Color(150, 150, 150));
-                g2d.fillRect(mowerX, mowerY, mowerSize, mowerSize);
+                g2d.fillRect(LAWN_MOWER_X_OFFSET, mowerY, LAWN_MOWER_SIZE, LAWN_MOWER_SIZE);
                 g2d.setColor(Color.BLACK);
-                g2d.drawRect(mowerX, mowerY, mowerSize, mowerSize);
+                g2d.drawRect(LAWN_MOWER_X_OFFSET, mowerY, LAWN_MOWER_SIZE, LAWN_MOWER_SIZE);
             }
         }
     }
@@ -79,7 +82,7 @@ public class GameRendererManager {
         int col = (mousePos.x - gridStartX) / cellWidth;
         int row = (mousePos.y - gridStartY) / cellHeight;
         
-        if (col >= 0 && col < 9 && row >= 0 && row < 5) {
+        if (col >= 0 && col < GRID_COLS && row >= 0 && row < GRID_ROWS) {
             int cellX = gridStartX + col * cellWidth;
             int cellY = gridStartY + row * cellHeight;
             

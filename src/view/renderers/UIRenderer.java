@@ -25,8 +25,7 @@ public class UIRenderer {
     private static final int SUN_BG_HEIGHT = 35;
     private static final int SUN_BG_OFFSET_X = -15;
     private static final int SUN_BG_OFFSET_Y = -27;
-    private static final int COOLDOWN_DURATION = 7500; // 7.5 seconds cooldown
-    public static final int CARD_COOLDOWN_MS = COOLDOWN_DURATION; // Public constant for external use
+    public static final int CARD_COOLDOWN_MS = 7500; // 7.5 seconds cooldown
 
     private final AssetLoader assetLoader;
     private final GameLogicUpdater gameLogic;
@@ -117,6 +116,13 @@ public class UIRenderer {
         g2.drawString(sunText, textX, textY);
     }
     
+    /**
+     * Draws a simplified sun icon with rays
+     * @param g2 Graphics2D context for drawing
+     * @param cx Center X coordinate of the sun
+     * @param cy Center Y coordinate of the sun
+     * @param radius Radius of the sun's center circle
+     */
     private void drawSunIcon(Graphics2D g2, int cx, int cy, int radius) {
         // Draw sun rays
         g2.setColor(new Color(255, 200, 0));
@@ -229,7 +235,7 @@ public class UIRenderer {
     
     private void drawCooldownOverlay(Graphics2D g2, Rectangle bounds, PlantCard card, long currentTime) {
         long elapsed = currentTime - card.getLastUsedTime();
-        float progress = Math.min(1.0f, (float)elapsed / COOLDOWN_DURATION);
+        float progress = Math.min(1.0f, (float)elapsed / CARD_COOLDOWN_MS);
         
         // Dark overlay
         g2.setColor(new Color(0, 0, 0, 150));
@@ -241,7 +247,7 @@ public class UIRenderer {
         g2.fillRect(bounds.x, bounds.y, bounds.width, overlayHeight);
         
         // Progress text
-        int remainingSeconds = (int)Math.ceil((COOLDOWN_DURATION - elapsed) / 1000.0);
+        int remainingSeconds = (int)Math.ceil((CARD_COOLDOWN_MS - elapsed) / 1000.0);
         if (remainingSeconds > 0) {
             g2.setColor(Color.WHITE);
             g2.setFont(costFont);
@@ -317,7 +323,7 @@ public class UIRenderer {
     
     private boolean isCardOnCooldown(PlantCard card, long currentTime) {
         if (card.getLastUsedTime() < 0) return false;
-        return (currentTime - card.getLastUsedTime()) < COOLDOWN_DURATION;
+        return (currentTime - card.getLastUsedTime()) < CARD_COOLDOWN_MS;
     }
     
     private void drawWaveIndicator(Graphics2D g2) {
