@@ -60,6 +60,7 @@ public class UIRenderer {
 
         drawChooserBackground(g2);
         drawSunValue(g2);
+        drawWaveIndicator(g2);
         drawPlantCards(g2, selectedCard, plantingMode);
         drawShovel(g2);
 
@@ -316,6 +317,74 @@ public class UIRenderer {
     private boolean isCardOnCooldown(PlantCard card, long currentTime) {
         if (card.getLastUsedTime() < 0) return false;
         return (currentTime - card.getLastUsedTime()) < COOLDOWN_DURATION;
+    }
+    
+    private void drawWaveIndicator(Graphics2D g2) {
+        int wave = gameLogic.getCurrentWave();
+        int progress = gameLogic.getWaveProgress();
+        int maxProgress = 10; // ZOMBIES_PER_WAVE
+        
+        // Position in top right area
+        int indicatorX = CHOOSER_X + CHOOSER_WIDTH + 20;
+        int indicatorY = CHOOSER_Y + 10;
+        int indicatorW = 150;
+        int indicatorH = 70;
+        
+        // Background panel
+        GradientPaint bgGradient = new GradientPaint(
+            indicatorX, indicatorY, new Color(40, 40, 60, 200),
+            indicatorX, indicatorY + indicatorH, new Color(20, 20, 40, 200)
+        );
+        g2.setPaint(bgGradient);
+        g2.fillRoundRect(indicatorX, indicatorY, indicatorW, indicatorH, 12, 12);
+        
+        // Border
+        g2.setColor(new Color(100, 100, 150));
+        g2.setStroke(new BasicStroke(2f));
+        g2.drawRoundRect(indicatorX, indicatorY, indicatorW, indicatorH, 12, 12);
+        
+        // Wave text
+        g2.setFont(new Font("Arial", Font.BOLD, 18));
+        g2.setColor(new Color(255, 255, 100));
+        String waveText = "Wave " + wave;
+        FontMetrics fm = g2.getFontMetrics();
+        int textX = indicatorX + (indicatorW - fm.stringWidth(waveText)) / 2;
+        g2.drawString(waveText, textX, indicatorY + 25);
+        
+        // Progress bar
+        int barX = indicatorX + 10;
+        int barY = indicatorY + 35;
+        int barW = indicatorW - 20;
+        int barH = 20;
+        
+        // Progress bar background
+        g2.setColor(new Color(60, 60, 80));
+        g2.fillRoundRect(barX, barY, barW, barH, 8, 8);
+        
+        // Progress bar fill
+        float progressRatio = (float)progress / maxProgress;
+        int fillW = (int)(barW * progressRatio);
+        if (fillW > 0) {
+            GradientPaint progressGradient = new GradientPaint(
+                barX, barY, new Color(100, 200, 100),
+                barX + fillW, barY, new Color(50, 150, 50)
+            );
+            g2.setPaint(progressGradient);
+            g2.fillRoundRect(barX, barY, fillW, barH, 8, 8);
+        }
+        
+        // Progress bar border
+        g2.setColor(new Color(150, 150, 150));
+        g2.setStroke(new BasicStroke(1.5f));
+        g2.drawRoundRect(barX, barY, barW, barH, 8, 8);
+        
+        // Progress text
+        g2.setFont(new Font("Arial", Font.PLAIN, 11));
+        g2.setColor(Color.WHITE);
+        String progressText = progress + " / " + maxProgress;
+        fm = g2.getFontMetrics();
+        textX = barX + (barW - fm.stringWidth(progressText)) / 2;
+        g2.drawString(progressText, textX, barY + barH - 5);
     }
 
     private void drawShovel(Graphics2D g2) {
