@@ -17,7 +17,9 @@ public class GameLogicUpdater {
     private int sun;
     private final List<PlantCard> plantCards;
     private int zombieSpawnTimer = 0;
+    private int totalZombiesSpawned = 0;
     private static final int ZOMBIE_SPAWN_INTERVAL = 500; // Spawn a zombie every 50 seconds at 10 FPS
+    private static final int ZOMBIES_PER_WAVE = 10;
 
     public GameLogicUpdater() {
         this.sun = 50; // Initial sun
@@ -108,7 +110,20 @@ public class GameLogicUpdater {
             zombieSpawnTimer = 0;
             int row = java.util.concurrent.ThreadLocalRandom.current().nextInt(5); // 0-4
             zombies.add(new Zombie(row));
-            System.out.println("A new zombie has appeared in row " + row);
+            totalZombiesSpawned++;
+            System.out.println("A new zombie has appeared in row " + row + " (Total: " + totalZombiesSpawned + ")");
         }
+    }
+    
+    public int getCurrentWave() {
+        return (totalZombiesSpawned / ZOMBIES_PER_WAVE) + 1;
+    }
+    
+    public int getWaveProgress() {
+        return totalZombiesSpawned % ZOMBIES_PER_WAVE;
+    }
+    
+    public int getZombiesPerWave() {
+        return ZOMBIES_PER_WAVE;
     }
 }

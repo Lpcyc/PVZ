@@ -5,6 +5,7 @@ import model.entities.*;
 import view.GridConverter;
 import view.asset.AssetLoader;
 import view.renderers.GameRendererManager;
+import view.renderers.UIRenderer;
 import model.entities.PlantCard;
 
 import javax.swing.*;
@@ -85,6 +86,15 @@ public class GamePanel extends JPanel {
     private void initializePanel() {
         setPreferredSize(new Dimension(1200, 600));
         setBackground(Color.BLACK);
+        
+        // Add mouse motion listener for hover effects
+        addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            @Override
+            public void mouseMoved(java.awt.event.MouseEvent e) {
+                rendererManager.updateMousePosition(e.getPoint());
+                repaint();
+            }
+        });
     }
 
     @Override
@@ -185,9 +195,15 @@ public class GamePanel extends JPanel {
     private boolean handleCardSelection(Point clickPoint) {
         int cardX = CARD_DRAW_X;
         int cardY = CARD_DRAW_Y;
+        long currentTime = System.currentTimeMillis();
         for (PlantCard card : gameLogic.getPlantCards()) {
             Rectangle cardBounds = new Rectangle(cardX, cardY, CARD_WIDTH, CARD_HEIGHT);
             if (cardBounds.contains(clickPoint)) {
+                // Check if card is on cooldown
+                if (card.getLastUsedTime() >= 0 && (currentTime - card.getLastUsedTime()) < UIRenderer.CARD_COOLDOWN_MS) {
+                    System.out.println(card.getName() + " is on cooldown");
+                    return true;
+                }
                 if (gameLogic.getSun() >= card.getCost()) {
                     selectedPlantCard = card;
                     plantingMode = true;
@@ -228,6 +244,7 @@ public class GamePanel extends JPanel {
         }
         addPlant(plant);
         gameLogic.addSun(-selectedPlantCard.getCost());
+        selectedPlantCard.setLastUsedTime(System.currentTimeMillis()); // Set cooldown
         System.out.println("Planted " + selectedPlantCard.getName() + " at (" + row + "," + col + ")");
         resetSelection();
     }
