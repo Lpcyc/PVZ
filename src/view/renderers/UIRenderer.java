@@ -26,6 +26,7 @@ public class UIRenderer {
     private static final int SUN_BG_OFFSET_X = -15;
     private static final int SUN_BG_OFFSET_Y = -27;
     private static final int COOLDOWN_DURATION = 7500; // 7.5 seconds cooldown
+    public static final int CARD_COOLDOWN_MS = COOLDOWN_DURATION; // Public constant for external use
 
     private final AssetLoader assetLoader;
     private final GameLogicUpdater gameLogic;
@@ -322,7 +323,7 @@ public class UIRenderer {
     private void drawWaveIndicator(Graphics2D g2) {
         int wave = gameLogic.getCurrentWave();
         int progress = gameLogic.getWaveProgress();
-        int maxProgress = 10; // ZOMBIES_PER_WAVE
+        int maxProgress = gameLogic.getZombiesPerWave();
         
         // Position in top right area
         int indicatorX = CHOOSER_X + CHOOSER_WIDTH + 20;

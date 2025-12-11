@@ -48,8 +48,8 @@ public class GameRendererManager {
     private void drawLawnMowers(Graphics2D g2d) {
         ImageInterface lawnMowerImage = assetLoader.getImage(AssetKey.UI_LAWNMOWER.getId());
         int mowerSize = 50;
-        int gridStartY = 75; // From GridConverter.GRID_START_Y
-        int cellHeight = 100; // From GridConverter.CELL_HEIGHT
+        int gridStartY = view.GridConverter.GRID_START_Y;
+        int cellHeight = view.GridConverter.CELL_HEIGHT;
         int mowerX = 180; // Position before the first column
         
         for (int row = 0; row < 5; row++) {
@@ -71,10 +71,10 @@ public class GameRendererManager {
         Point mousePos = uiRenderer.getMousePosition();
         if (mousePos == null || mousePos.x < 0) return;
         
-        int gridStartX = 250; // From GridConverter.GRID_START_X
-        int gridStartY = 75;  // From GridConverter.GRID_START_Y
-        int cellWidth = 83;   // From GridConverter.CELL_WIDTH
-        int cellHeight = 100; // From GridConverter.CELL_HEIGHT
+        int gridStartX = view.GridConverter.GRID_START_X;
+        int gridStartY = view.GridConverter.GRID_START_Y;
+        int cellWidth = view.GridConverter.CELL_WIDTH;
+        int cellHeight = view.GridConverter.CELL_HEIGHT;
         
         int col = (mousePos.x - gridStartX) / cellWidth;
         int row = (mousePos.y - gridStartY) / cellHeight;

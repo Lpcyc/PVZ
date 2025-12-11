@@ -122,4 +122,8 @@ public class GameLogicUpdater {
     public int getWaveProgress() {
         return totalZombiesSpawned % ZOMBIES_PER_WAVE;
     }
+    
+    public int getZombiesPerWave() {
+        return ZOMBIES_PER_WAVE;
+    }
 }

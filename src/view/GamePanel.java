@@ -5,6 +5,7 @@ import model.entities.*;
 import view.GridConverter;
 import view.asset.AssetLoader;
 import view.renderers.GameRendererManager;
+import view.renderers.UIRenderer;
 import model.entities.PlantCard;
 
 import javax.swing.*;
@@ -199,7 +200,7 @@ public class GamePanel extends JPanel {
             Rectangle cardBounds = new Rectangle(cardX, cardY, CARD_WIDTH, CARD_HEIGHT);
             if (cardBounds.contains(clickPoint)) {
                 // Check if card is on cooldown
-                if (card.getLastUsedTime() >= 0 && (currentTime - card.getLastUsedTime()) < 7500) {
+                if (card.getLastUsedTime() >= 0 && (currentTime - card.getLastUsedTime()) < UIRenderer.CARD_COOLDOWN_MS) {
                     System.out.println(card.getName() + " is on cooldown");
                     return true;
                 }
